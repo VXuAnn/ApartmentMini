@@ -68,7 +68,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(268, 923);
+            this.panel1.Size = new System.Drawing.Size(268, 712);
             this.panel1.TabIndex = 0;
             // 
             // button4
@@ -224,11 +224,10 @@
             // 
             this.panel2.AutoScroll = true;
             this.panel2.AutoSize = true;
-            this.panel2.BackColor = System.Drawing.Color.Orange;
-            this.panel2.Enabled = false;
-            this.panel2.Location = new System.Drawing.Point(274, 135);
+            this.panel2.BackColor = System.Drawing.Color.DarkOrange;
+            this.panel2.Location = new System.Drawing.Point(274, 120);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1090, 783);
+            this.panel2.Size = new System.Drawing.Size(1090, 798);
             this.panel2.TabIndex = 1;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint_1);
             // 
@@ -243,6 +242,7 @@
             this.label1.Size = new System.Drawing.Size(588, 45);
             this.label1.TabIndex = 0;
             this.label1.Text = "Phần mềm quản lý chung cư mini";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // panel3
             // 
@@ -250,7 +250,7 @@
             this.panel3.Controls.Add(this.label1);
             this.panel3.Location = new System.Drawing.Point(274, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1090, 129);
+            this.panel3.Size = new System.Drawing.Size(1090, 114);
             this.panel3.TabIndex = 2;
             this.panel3.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
             // 
@@ -259,7 +259,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1373, 923);
+            this.ClientSize = new System.Drawing.Size(1464, 712);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel3);
@@ -267,7 +267,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ApartmentMini_Management|Dashboard";
+            this.Text = "ApartmentMini_Management";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
