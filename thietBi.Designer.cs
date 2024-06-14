@@ -55,7 +55,7 @@
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersWidth = 51;
             this.dataGridView2.RowTemplate.Height = 24;
-            this.dataGridView2.Size = new System.Drawing.Size(1000, 245);
+            this.dataGridView2.Size = new System.Drawing.Size(871, 245);
             this.dataGridView2.TabIndex = 24;
             // 
             // Column8
@@ -138,6 +138,7 @@
             this.Controls.Add(this.dataGridView2);
             this.Name = "thietBi";
             this.Text = "thietBi";
+            this.Load += new System.EventHandler(this.thietBi_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

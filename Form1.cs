@@ -56,7 +56,7 @@ namespace ApartmentMini_Management_System
 
         private void panel2_Paint_1(object sender, PaintEventArgs e)
         {
-
+                
         }
 
         private void panel3_Paint(object sender, PaintEventArgs e)
@@ -110,6 +110,11 @@ namespace ApartmentMini_Management_System
         {
             openChildForm(new huyDK());
             label1.Text = buttonHoaDon.Text;
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

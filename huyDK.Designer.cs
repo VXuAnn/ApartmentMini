@@ -78,7 +78,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(798, 245);
+            this.dataGridView1.Size = new System.Drawing.Size(899, 245);
             this.dataGridView1.TabIndex = 30;
             // 
             // Column1
@@ -149,7 +149,7 @@
             this.label2.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(180, 493);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(84, 33);
+            this.label2.Size = new System.Drawing.Size(67, 26);
             this.label2.TabIndex = 36;
             this.label2.Text = "Lý do";
             // 

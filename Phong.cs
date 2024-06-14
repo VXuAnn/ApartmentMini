@@ -1,127 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ApartmentMini_Management_System
 {
     public partial class Phong : Form
     {
-        string connectionString = "Data Source=VUAN;Initial Catalog=APARTMENT;Integrated Security=True;";
+        SqlConnection conec = null;
+        string stronic = @"Data Source=VUAN;Initial Catalog=APARTMENT;Integrated Security=True;";
+        private int currentPage = 1;
+        private const int roomsPerPage = 8;
+
         public Phong()
         {
             InitializeComponent();
         }
 
-        private void LoadPhongInfo()
+        private void openChildControl(UserControl childControl, Panel targetPanel)
         {
-            
-            string query = "SELECT * FROM PHONG";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, connection);
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                int panelWidth = 150;
-                int panelHeight = 180;
-                int horizontalSpacing = 30; // Khoảng cách ngang giữa các panel
-                int verticalSpacing = 10; // Khoảng cách dọc giữa các panel
-                int maxPanelsPerRow = 5; // Số lượng panel tối đa trên mỗi hàng
-                int panelCount = 0;
-                int row = 0;
-                int column = 0;
-                int panelsInCurrentRow = 0; // Số lượng panel đã thêm vào hàng hiện tại
-
-                while (reader.Read())
-                {
-                    string maSoPhong = reader["MASOPHONG"].ToString();
-                    string loaiPhong = reader["LOAIPHONG"].ToString();
-                    decimal gia = Convert.ToDecimal(reader["GIA"]); // Chuyển đổi dữ liệu thành decimal
-                    bool tinhTrang = Convert.ToBoolean(reader["TINHTRANG"]); // Chuyển đổi dữ liệu thành boolean
-
-                    // Tạo panel mới cho mỗi mã số phòng
-                    Panel panel = new Panel();
-                    panel.BorderStyle = BorderStyle.FixedSingle;
-                    panel.Width = panelWidth;
-                    panel.Height = panelHeight;
-
-                    // Tạo các label hiển thị thông tin phòng
-                    string maSoPhongFormatted = "P" + maSoPhong.Substring(1); // Lấy phần số từ index 1 của mã số phòng
-                    Label labelMaSoPhong = new Label();
-                    labelMaSoPhong.Text = "Mã số phòng: " + maSoPhongFormatted;
-                    labelMaSoPhong.Location = new Point(horizontalSpacing, verticalSpacing);
-
-                    Label labelLoaiPhong = new Label();
-                    labelLoaiPhong.Text = "Loại phòng: " + loaiPhong;
-                    labelLoaiPhong.Location = new Point(horizontalSpacing, labelMaSoPhong.Bottom + verticalSpacing);
-
-                    Label labelGia = new Label();
-                    labelGia.Text = "Giá: " + gia.ToString("N0") + " VND"; // Hiển thị giá theo định dạng số có dấu phẩy ngăn cách hàng nghìn
-                    labelGia.Location = new Point(horizontalSpacing, labelLoaiPhong.Bottom + verticalSpacing);
-
-                    Label labelTinhTrang = new Label();
-                    labelTinhTrang.Text = "Tình trạng: " + (tinhTrang ? "Bận" : "Trống"); // Hiển thị tình trạng dựa trên giá trị boolean
-                    labelTinhTrang.Location = new Point(horizontalSpacing, labelGia.Bottom + verticalSpacing);
-
-                    // Thêm các control vào panel
-                    panel.Controls.Add(labelMaSoPhong);
-                    panel.Controls.Add(labelLoaiPhong);
-                    panel.Controls.Add(labelGia);
-                    panel.Controls.Add(labelTinhTrang);
-
-                    // Thiết lập màu nền của panel dựa trên trạng thái thuê
-                    if (tinhTrang)
-                    {
-                        // Nếu phòng bận, màu nền là màu xanh dương
-                        panel.BackColor = Color.LightCoral;
-                    }
-                    else
-                    {
-                        // Nếu phòng trống, màu nền là màu xanh lá cây nhạt
-                        panel.BackColor = Color.LightGreen;
-                    }
-                   
-                    // Đặt vị trí của panel trên panel2
-                    panel.Location = new Point((panelWidth + horizontalSpacing) * column, (panelHeight + verticalSpacing) * row);
-
-                    // Thêm panel vào panel2 của form
-                    panel2.Controls.Add(panel);
-
-                    // Tính toán vị trí của panel tiếp theo
-                    panelCount++;
-                    column++;
-                    panelsInCurrentRow++;
-
-                    // Nếu đã đủ số lượng panel trên một hàng, chuyển sang hàng mới
-                    if (panelsInCurrentRow >= maxPanelsPerRow)
-                    {
-                        row++;
-                        column = 0;
-                        panelsInCurrentRow = 0;
-                    }
-                }
-
-                reader.Close();
-            }
+            targetPanel.Controls.Clear();
+            childControl.Dock = DockStyle.Fill;
+            targetPanel.Controls.Add(childControl);
+            childControl.BringToFront();
+            childControl.Show();
         }
-        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void label1_Click(object sender, EventArgs e)
         {
 
@@ -132,7 +37,12 @@ namespace ApartmentMini_Management_System
 
         }
 
-        private void panel2_Paint(object sender, PaintEventArgs e)
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
         {
 
         }
@@ -142,35 +52,148 @@ namespace ApartmentMini_Management_System
 
         }
 
-       
+
         private void AddScrollBar()
         {
-            // Tạo một thanh cuộn mới
-            VScrollBar vScrollBar = new VScrollBar();
-            vScrollBar.Dock = DockStyle.Right; // Đặt thanh cuộn ở cạnh phải của panel
-            vScrollBar.Scroll += VScrollBar_Scroll; // Gắn sự kiện Scroll
-
-            // Thêm thanh cuộn vào form
-            Controls.Add(vScrollBar);
+            panel2.AutoScroll = true;
         }
 
-        private void VScrollBar_Scroll(object sender, ScrollEventArgs e)
-        {
-            // Thiết lập vị trí của Panel2 dựa trên giá trị cuộn của thanh cuộn
-            panel2.AutoScrollPosition = new Point(panel2.AutoScrollPosition.X, e.NewValue);
-        }
         private void Phong_Load(object sender, EventArgs e)
         {
             AddScrollBar();
-            LoadPhongInfo();
+            DisplayCurrentPage();
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
+        private void DisplayCurrentPage()
         {
-
-
+            List<UserControl> rooms = thongtinPhong(currentPage, roomsPerPage);
+            ClearPanels();
+            
+            foreach (var room in rooms)
+            {
+                if (room is tThongPhong)
+                {
+                    tThongPhong roomControl = (tThongPhong)room;
+                    int panelNumber = rooms.IndexOf(room) + 3; // Map to panel3 to panel10
+                    Panel targetPanel = (Panel)panel2.Controls.Find($"panel{panelNumber}", true).FirstOrDefault();
+                    if (targetPanel != null)
+                    {
+                        openChildControl(room, targetPanel);
+                    }
+                }
+                else if (room is tThongPhongTrong)
+                {
+                    tThongPhongTrong emptyRoomControl = (tThongPhongTrong)room;
+                    int panelNumber = rooms.IndexOf(room) + 3; // Map to panel3 to panel10
+                    Panel targetPanel = (Panel)panel2.Controls.Find($"panel{panelNumber}", true).FirstOrDefault();
+                    if (targetPanel != null)
+                    {
+                        openChildControl(emptyRoomControl, targetPanel);
+                    }
+                   
+                }
+            }
+            
         }
-        
 
+
+
+
+
+        private List<UserControl> thongtinPhong(int pageNumber, int pageSize)
+        {
+            List<UserControl> rooms = new List<UserControl>();
+
+            if (conec == null)
+            {
+                conec = new SqlConnection(stronic);
+            }
+            if (conec.State == ConnectionState.Closed)
+            {
+                conec.Open();
+            }
+
+            SqlCommand command = new SqlCommand
+            {
+                CommandType = CommandType.StoredProcedure,
+                CommandText = "ttPhong",
+                Connection = conec
+            };
+
+            command.Parameters.AddWithValue("@PageNumber", pageNumber);
+            command.Parameters.AddWithValue("@PageSize", pageSize);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                bool tinhTrang = Convert.ToBoolean(reader["TINHTRANG"]);
+
+                if (tinhTrang)
+                {
+                    // TINHTRANG is true, use tThongPhong
+                    string maSoPhong = reader["MASOPHONG"].ToString();
+                    string loaiPhong = reader["LOAIPHONG"].ToString();
+                    string hoTen = reader["HOTEN"].ToString();
+                    string gia = reader["GIA"].ToString();
+
+                    tThongPhong roomControl = new tThongPhong();
+                    roomControl.UpdateInfo(maSoPhong, loaiPhong, hoTen, gia);
+                    rooms.Add(roomControl);
+                }
+                else
+                {
+                    // TINHTRANG is false, use tThongPhongTrong
+                    string maSoPhong = reader["MASOPHONG"].ToString();
+                    string loaiPhong = reader["LOAIPHONG"].ToString();
+                    string gia = reader["GIA"].ToString();
+
+                    tThongPhongTrong emptyRoomControl = new tThongPhongTrong();
+                    emptyRoomControl.UpdateInfo2(maSoPhong, loaiPhong, gia);
+                    rooms.Add(emptyRoomControl);
+                }
+            }
+
+            reader.Close();
+            return rooms;
+        }
+
+
+
+        private void ClearPanels()
+        {
+            for (int i = 3; i <= 10; i++)
+            {
+                Panel targetPanel = (Panel)panel2.Controls.Find($"panel{i}", true).FirstOrDefault();
+                if (targetPanel != null)
+                {
+                    targetPanel.Controls.Clear();
+                }
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e) // Trang Trước
+        {
+            if (currentPage > 1)
+            {
+                currentPage--;
+                DisplayCurrentPage();
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e) // Trang Sau
+        {
+            currentPage++;
+            List<UserControl> rooms = thongtinPhong(currentPage, roomsPerPage);
+
+            if (rooms.Count > 0)
+            {
+                DisplayCurrentPage();
+            }
+            else
+            {
+                currentPage--; // Không tăng trang nếu không có dữ liệu
+            }
+        }
     }
 }
